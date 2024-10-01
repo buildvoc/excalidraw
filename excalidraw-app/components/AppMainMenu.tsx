@@ -1,15 +1,17 @@
 import React from "react";
 import {
   loginIcon,
-  ExcalLogo,
-  eyeIcon,
+  // ExcalLogo,
+  // eyeIcon,
 } from "../../packages/excalidraw/components/icons";
 import type { Theme } from "../../packages/excalidraw/element/types";
 import { MainMenu } from "../../packages/excalidraw/index";
-import { isExcalidrawPlusSignedUser } from "../app_constants";
+// import { isExcalidrawPlusSignedUser } from "../app_constants";
 import { LanguageList } from "../app-language/LanguageList";
-import { saveDebugState } from "./DebugCanvas";
+// import { saveDebugState } from "./DebugCanvas";
+import { useAuth } from "../pages/AuthContext";
 
+// const { isAuthenticated, logout } = useAuth();
 export const AppMainMenu: React.FC<{
   onCollabDialogOpen: () => any;
   isCollaborating: boolean;
@@ -18,6 +20,7 @@ export const AppMainMenu: React.FC<{
   setTheme: (theme: Theme | "system") => void;
   refresh: () => void;
 }> = React.memo((props) => {
+  const { isAuthenticated, logout } = useAuth();
   return (
     <MainMenu>
       <MainMenu.DefaultItems.LoadScene />
@@ -35,7 +38,7 @@ export const AppMainMenu: React.FC<{
       <MainMenu.DefaultItems.Help />
       <MainMenu.DefaultItems.ClearCanvas />
       <MainMenu.Separator />
-      <MainMenu.ItemLink
+      {/* <MainMenu.ItemLink
         icon={ExcalLogo}
         href={`${
           import.meta.env.VITE_APP_PLUS_LP
@@ -44,8 +47,16 @@ export const AppMainMenu: React.FC<{
       >
         Excalidraw+
       </MainMenu.ItemLink>
-      <MainMenu.DefaultItems.Socials />
-      <MainMenu.ItemLink
+      <MainMenu.DefaultItems.Socials /> */}
+      {isAuthenticated && (
+        <MainMenu.Item
+          icon={loginIcon} // You can use a different icon if preferred
+          onClick={logout} // Call logout function on click
+        >
+          Logout
+        </MainMenu.Item>
+      )}
+      {/* <MainMenu.ItemLink
         icon={loginIcon}
         href={`${import.meta.env.VITE_APP_PLUS_APP}${
           isExcalidrawPlusSignedUser ? "" : "/sign-up"
@@ -53,8 +64,8 @@ export const AppMainMenu: React.FC<{
         className="highlighted"
       >
         {isExcalidrawPlusSignedUser ? "Sign in" : "Sign up"}
-      </MainMenu.ItemLink>
-      {import.meta.env.DEV && (
+      </MainMenu.ItemLink> */}
+      {/* {import.meta.env.DEV && (
         <MainMenu.Item
           icon={eyeIcon}
           onClick={() => {
@@ -70,7 +81,7 @@ export const AppMainMenu: React.FC<{
         >
           Visual Debug
         </MainMenu.Item>
-      )}
+      )} */}
       <MainMenu.Separator />
       <MainMenu.DefaultItems.ToggleTheme
         allowSystemTheme
