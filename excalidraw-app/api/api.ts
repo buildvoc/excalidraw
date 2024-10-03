@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_APP_URL, // Use your environment variable
+  baseURL: import.meta.env.VITE_APP_AUTH_URL, // Use your environment variable
   headers: {
     "Content-Type": "application/json",
   },

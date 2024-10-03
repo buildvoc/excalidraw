@@ -81,7 +81,7 @@ const LoginRegister: React.FC = () => {
     } catch (error: any) {
       console.error("Registration error:", error);
       const errorMessage =
-        error.response?.data?.message ||
+        error.response?.data?.message[0] ||
         "Registration failed! Please try again.";
       toast.error(errorMessage);
     }

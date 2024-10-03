@@ -1,7 +1,7 @@
 // authServices.ts
 import axios from "axios";
 
-const APP_URL = import.meta.env.VITE_APP_URL; // Adjust according to your env
+const APP_URL = import.meta.env.VITE_APP_AUTH_URL; // Adjust according to your env
 
 // Login function
 export const login = async ({
@@ -11,7 +11,7 @@ export const login = async ({
   email: string;
   password: string;
 }) => {
-  const response = await axios.post(`${APP_URL}/login`, {
+  const response = await axios.post(`${APP_URL}/api/v2/auth/login`, {
     email,
     password,
   });
@@ -30,7 +30,7 @@ export const register = async ({
   password: string;
   password_confirmation: string;
 }) => {
-  const response = await axios.post(`${APP_URL}/register`, {
+  const response = await axios.post(`${APP_URL}/api/v2/auth/register`, {
     name,
     email,
     password,
