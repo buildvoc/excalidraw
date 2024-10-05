@@ -28,7 +28,7 @@ const LoginRegister: React.FC = () => {
     }
   }, []);
   if (isAuthenticated) {
-    return <Navigate to="/white-board" />;
+    return <Navigate to="/" />;
   }
 
   const toggleForm = () => {
@@ -59,7 +59,7 @@ const LoginRegister: React.FC = () => {
     } catch (error: any) {
       console.error("Login error:", error);
       const errorMessage =
-        error.response?.data?.message ||
+        error.response?.data?.message[0] ||
         "Login failed! Please check your credentials.";
       toast.error(errorMessage);
     }
