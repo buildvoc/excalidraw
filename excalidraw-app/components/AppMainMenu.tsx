@@ -1,6 +1,8 @@
 import React from "react";
 import {
+  ExportIcon,
   loginIcon,
+  PlusIcon,
   // ExcalLogo,
   // eyeIcon,
 } from "../../packages/excalidraw/components/icons";
@@ -11,9 +13,10 @@ import { LanguageList } from "../app-language/LanguageList";
 // import { saveDebugState } from "./DebugCanvas";
 import { useAuth } from "../pages/AuthContext";
 
-// const { isAuthenticated, logout } = useAuth();
 export const AppMainMenu: React.FC<{
   onCollabDialogOpen: () => any;
+  onDashboardSaveDialogOpen: () => any;
+  onProjectDialogOpen: () => any;
   isCollaborating: boolean;
   isCollabEnabled: boolean;
   theme: Theme | "system";
@@ -25,6 +28,16 @@ export const AppMainMenu: React.FC<{
     <MainMenu>
       <MainMenu.DefaultItems.LoadScene />
       <MainMenu.DefaultItems.SaveToActiveFile />
+      {isAuthenticated && (
+        <>
+        <MainMenu.Item
+          onSelect={() => props.onDashboardSaveDialogOpen()}
+          icon={ExportIcon}
+        >
+          Save to project
+        </MainMenu.Item>
+        </>
+      )}
       <MainMenu.DefaultItems.Export />
       <MainMenu.DefaultItems.SaveAsImage />
       {props.isCollabEnabled && (
@@ -49,12 +62,20 @@ export const AppMainMenu: React.FC<{
       </MainMenu.ItemLink>
       <MainMenu.DefaultItems.Socials /> */}
       {isAuthenticated && (
+        <>
+        <MainMenu.Item
+          onSelect={() => props.onProjectDialogOpen()}
+          icon={PlusIcon}
+        >
+          Add new project
+        </MainMenu.Item>
         <MainMenu.Item
           icon={loginIcon} // You can use a different icon if preferred
           onClick={logout} // Call logout function on click
         >
           Logout
         </MainMenu.Item>
+        </>
       )}
       {/* <MainMenu.ItemLink
         icon={loginIcon}

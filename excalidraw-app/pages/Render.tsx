@@ -130,6 +130,11 @@ import DebugCanvas, {
 } from "../components/DebugCanvas";
 import { AIComponents } from "../components/AI";
 
+import "react-toastify/dist/ReactToastify.css"; 
+import { ToastContainer } from "react-toastify";
+import { AddProjectDialog, projectDialogStateAtom } from "../projects/AddProjectDialog";
+import { DashboardSaveDialog, dashboardSaveDialogStateAtom } from "../dashboard-save/DashboardSaveDialog";
+
 polyfill();
 
 window.EXCALIDRAW_THROTTLE_RENDER = true;
@@ -303,7 +308,7 @@ const initializeScene = async (opts: {
           isLoading: false,
         },
         elements: reconcileElements(
-          scene?.elements || [],
+          scene?.elements as OrderedExcalidrawElement[],
           excalidrawAPI.getSceneElementsIncludingDeleted() as RemoteExcalidrawElement[],
           excalidrawAPI.getAppState(),
         ),
@@ -364,6 +369,9 @@ const ExcalidrawWrapper = () => {
     return isCollaborationLink(window.location.href);
   });
   const collabError = useAtomValue(collabErrorIndicatorAtom);
+
+  const [dashboardSaveDialogState, setDashboardSaveDialogState] = useAtom(dashboardSaveDialogStateAtom);
+  const [projectDialogState, setProjectDialogState] = useAtom(projectDialogStateAtom);
 
   useHandleLibrary({
     excalidrawAPI,
@@ -725,6 +733,16 @@ const ExcalidrawWrapper = () => {
     [setShareDialogState],
   );
 
+  const onDashboardSaveDialogOpen = useCallback(
+    () => setDashboardSaveDialogState({ isOpen: true }),
+    [setDashboardSaveDialogState],
+  );
+
+  const onProjectDialogOpen = useCallback(
+    () => setProjectDialogState({ isOpen: true }),
+    [setProjectDialogState],
+  );
+
   // browsers generally prevent infinite self-embedding, there are
   // cases where it still happens, and while we disallow self-embedding
   // by not whitelisting our own origin, this serves as an additional guard
@@ -858,6 +876,8 @@ const ExcalidrawWrapper = () => {
           theme={appTheme}
           setTheme={(theme) => setAppTheme(theme)}
           refresh={() => forceRefresh((prev) => !prev)}
+          onDashboardSaveDialogOpen={onDashboardSaveDialogOpen}
+          onProjectDialogOpen={onProjectDialogOpen}
         />
         <AppWelcomeScreen
           onCollabDialogOpen={onCollabDialogOpen}
@@ -919,6 +939,9 @@ const ExcalidrawWrapper = () => {
             }
           }}
         />
+
+        {projectDialogState.isOpen && <AddProjectDialog setErrorMessage={setErrorMessage} /> }
+        {dashboardSaveDialogState.isOpen && <DashboardSaveDialog setErrorMessage={setErrorMessage} /> }
 
         {errorMessage && (
           <ErrorDialog onClose={() => setErrorMessage("")}>
@@ -1131,6 +1154,17 @@ const ExcalidrawApp = () => {
   return (
     <TopErrorBoundary>
       <Provider unstable_createStore={() => appJotaiStore}>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <ExcalidrawWrapper />
       </Provider>
     </TopErrorBoundary>
