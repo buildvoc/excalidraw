@@ -15,6 +15,7 @@ import { projectDialogStateAtom } from "../projects/AddProjectDialog";
 import { ExcalidrawImperativeAPI } from "../../packages/excalidraw/types";
 import { exportToBackend } from "../data";
 import { getDefaultAppState } from "../../packages/excalidraw/appState";
+import { useAuth } from "../pages/AuthContext";
 
 
 export const dashboardSaveDialogStateAtom = atom<
@@ -44,6 +45,8 @@ export const DashboardSaveDialog = ({
 
   const { openDialog } = useUIAppState();
 
+  const { logout } = useAuth();
+
   useEffect(() => {
     if (openDialog) {
       setDashboardSaveDialogState({ isOpen: false });
@@ -61,6 +64,7 @@ export const DashboardSaveDialog = ({
       } catch (error: any) {
         const msg = error.response?.data?.message[0] || "Load projects failed!";
         setErrorMessage(msg);
+        if (error.response?.status == 401) logout();
       } finally {
         setLoading(false);
       }

@@ -11,6 +11,7 @@ import { atom, useAtom } from "jotai";
 import "./ProjectDialog.scss";
 import { toast } from "react-toastify";
 import { addProject } from "../api/project";
+import { useAuth } from "../pages/AuthContext";
 
 
 export const projectDialogStateAtom = atom<
@@ -28,6 +29,8 @@ export const AddProjectDialog = ({
   const [projectDialogState, setProjectDialogState] = useAtom(projectDialogStateAtom);
 
   const { openDialog } = useUIAppState();
+  
+  const { logout } = useAuth();
 
   useEffect(() => {
     if (openDialog) {
@@ -46,6 +49,7 @@ export const AddProjectDialog = ({
     } catch (error: any) {
       const msg = error.response?.data?.message[0] || "Create project failed!";
       setErrorMessage(msg);
+      if (error.response?.status == 401) logout();
     }
   };
 

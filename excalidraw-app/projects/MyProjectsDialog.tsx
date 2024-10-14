@@ -9,6 +9,7 @@ import "./ProjectDialog.scss";
 import { getProjects } from "../api/project";
 import { LinkIcon, LoadIcon, } from "../../packages/excalidraw/components/icons";
 import Spinner from "../../packages/excalidraw/components/Spinner";
+import { useAuth } from "../pages/AuthContext";
 
 
 export const myProjectsDialogStateAtom = atom<
@@ -30,6 +31,8 @@ export const MyProjectsDialog = ({
   const [myProjectDialogState, setMyProjectsDialogState] = useAtom(myProjectsDialogStateAtom);
 
   const { openDialog } = useUIAppState();
+  
+  const { logout } = useAuth();
 
   useEffect(() => {
     if (openDialog) {
@@ -52,6 +55,7 @@ export const MyProjectsDialog = ({
       } catch (error: any) {
         const msg = error.response?.data?.message[0] || "Load projects failed!";
         setErrorMessage(msg);
+        if (error.response?.status == 401) logout();
       } finally {
         setLoading(false);
       }
