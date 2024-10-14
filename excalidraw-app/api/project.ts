@@ -19,3 +19,15 @@ export const addProject = async ({
   return response.data;
 };
 
+type ScenePayload = {
+  title: string,
+  project: string|null|undefined,
+  value: string
+}
+export const saveSceneToProject = async (data: ScenePayload) => {
+  
+  const response = await api.post(`${APP_URL}/api/v2/draw`, data);
+  return response.data;
+};
+
+

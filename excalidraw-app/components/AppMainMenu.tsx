@@ -1,8 +1,9 @@
 import React from "react";
 import {
-  ExportIcon,
+  LoadIcon,
   loginIcon,
   PlusIcon,
+  save,
   // ExcalLogo,
   // eyeIcon,
 } from "../../packages/excalidraw/components/icons";
@@ -17,6 +18,7 @@ export const AppMainMenu: React.FC<{
   onCollabDialogOpen: () => any;
   onDashboardSaveDialogOpen: () => any;
   onProjectDialogOpen: () => any;
+  onMyProjectsDialogOpen: () => any;
   isCollaborating: boolean;
   isCollabEnabled: boolean;
   theme: Theme | "system";
@@ -26,18 +28,30 @@ export const AppMainMenu: React.FC<{
   const { isAuthenticated, logout } = useAuth();
   return (
     <MainMenu>
-      <MainMenu.DefaultItems.LoadScene />
-      <MainMenu.DefaultItems.SaveToActiveFile />
       {isAuthenticated && (
         <>
         <MainMenu.Item
+          onSelect={() => props.onProjectDialogOpen()}
+          icon={PlusIcon}
+        >
+          Create new project
+        </MainMenu.Item>
+        <MainMenu.Item
+          onSelect={() => props.onMyProjectsDialogOpen()}
+          icon={LoadIcon}
+        >
+          My projects
+        </MainMenu.Item>
+        <MainMenu.Item
           onSelect={() => props.onDashboardSaveDialogOpen()}
-          icon={ExportIcon}
+          icon={save}
         >
           Save to project
         </MainMenu.Item>
         </>
       )}
+      <MainMenu.DefaultItems.LoadScene />
+      <MainMenu.DefaultItems.SaveToActiveFile />
       <MainMenu.DefaultItems.Export />
       <MainMenu.DefaultItems.SaveAsImage />
       {props.isCollabEnabled && (
@@ -64,16 +78,10 @@ export const AppMainMenu: React.FC<{
       {isAuthenticated && (
         <>
         <MainMenu.Item
-          onSelect={() => props.onProjectDialogOpen()}
-          icon={PlusIcon}
-        >
-          Add new project
-        </MainMenu.Item>
-        <MainMenu.Item
           icon={loginIcon} // You can use a different icon if preferred
           onClick={logout} // Call logout function on click
         >
-          Logout
+          Sign out
         </MainMenu.Item>
         </>
       )}

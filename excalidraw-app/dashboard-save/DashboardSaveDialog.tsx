@@ -10,8 +10,11 @@ import { atom, useAtom } from "jotai";
 
 import "./DashboardSaveDialog.scss";
 import { toast } from "react-toastify";
-import { getProjects } from "../api/project";
+import { getProjects, saveSceneToProject } from "../api/project";
 import { projectDialogStateAtom } from "../projects/AddProjectDialog";
+import { ExcalidrawImperativeAPI } from "../../packages/excalidraw/types";
+import { exportToBackend } from "../data";
+import { getDefaultAppState } from "../../packages/excalidraw/appState";
 
 
 export const dashboardSaveDialogStateAtom = atom<
@@ -19,11 +22,21 @@ export const dashboardSaveDialogStateAtom = atom<
 >({ isOpen: false });
 
 export type DashboardSaveDialogProps = {
+  excalidrawAPI: ExcalidrawImperativeAPI | null;
   setErrorMessage: (error: string) => void;
+  setLatestProjectId: (projectId: string|null) => void;
+  setLatestSceneTitle: (title: string) => void;
+  projectId: string|null;
+  scaneTitle: string;
 };
 
 export const DashboardSaveDialog = ({
+  excalidrawAPI,
   setErrorMessage,
+  setLatestProjectId,
+  setLatestSceneTitle,
+  projectId,
+  scaneTitle,
 }: DashboardSaveDialogProps) => {
   const { t } = useI18n();
   const [dashboardSaveDialogState, setDashboardSaveDialogState] = useAtom(dashboardSaveDialogStateAtom);
@@ -36,33 +49,69 @@ export const DashboardSaveDialog = ({
       setDashboardSaveDialogState({ isOpen: false });
     }
   }, [openDialog, setDashboardSaveDialogState]);
-  
 
-  const [title, setTitle] = useState<string>("Untilted");
-  const [selectedProject, setSelectedProject] = useState<string>();
-
+  const [loading, setLoading] = useState<boolean>(true);
   const [projects, setProjects] = useState<any>([]);
   useEffect(() => {
     const loadProjects = async () => {
+      setLoading(true);
       try {
         const resp = await getProjects();
         setProjects(resp);
       } catch (error: any) {
         const msg = error.response?.data?.message[0] || "Load projects failed!";
         setErrorMessage(msg);
+      } finally {
+        setLoading(false);
       }
     };
     loadProjects();
   }, [projectDialogState.isOpen]);
 
   const handleSubmit = async () => {
-    try {
+    if (!excalidrawAPI) {
+      setErrorMessage(t("alerts.cannotExportEmptyCanvas"));
+      return;
+    }
+    if (excalidrawAPI.getSceneElements().length === 0) {
+      setErrorMessage(t("alerts.cannotExportEmptyCanvas"));
+      return;
+    }
 
-      console.log(selectedProject, title);
+    const appState = excalidrawAPI.getAppState();
+    const elements = excalidrawAPI.getSceneElements();
+    const files = excalidrawAPI.getFiles();
+
+    try {
       
-      
+      const { url, errorMessage } = await exportToBackend(
+        elements,
+        {
+          ...appState,
+          viewBackgroundColor: appState.exportBackground
+            ? appState.viewBackgroundColor
+            : getDefaultAppState().viewBackgroundColor,
+        },
+        files,
+      );
+
+      if (errorMessage) {
+        setErrorMessage(errorMessage);
+      }
+
+      if (url) {
+        const dataInput = {
+          title: scaneTitle,
+          project: projectId,
+          value: new URL(url).hash
+        }
+        
+        await saveSceneToProject(dataInput);
+        toast.success("Saved successfully.");
+        setDashboardSaveDialogState({ isOpen: false });
+      }
     } catch (error: any) {
-      const msg = error.response?.data?.message[0] || "Save to dashboard failed!";
+      const msg = error.response?.data?.message[0] || "Save to project failed!";
       setErrorMessage(msg);
     }
   };
@@ -80,8 +129,8 @@ export const DashboardSaveDialog = ({
         <TextField
           placeholder="Title"
           label="Title"
-          value={title}
-          onChange={setTitle}
+          value={scaneTitle}
+          onChange={setLatestSceneTitle}
           onKeyDown={(event) => event.key === KEYS.ENTER && handleSubmit()}
         />
         <div className="ExcTextField--fullWidth">
@@ -93,11 +142,12 @@ export const DashboardSaveDialog = ({
           </div>
           <select
             className="dropdown-select dropdown-select__proj"
-            onChange={({ target }) => setSelectedProject(target.value)}
-            value={selectedProject}
+            onChange={({ target }) => setLatestProjectId(target.value)}
+            value={projectId ? projectId : ""}
             aria-label={"Select project"}
             style={{width: "100%"}}
           >
+            <option value={""}>{loading ? 'Loading projects...': ''}</option>
             {projects.map((item: any) => (
               <option key={item.id} value={item.id}>
                 {item.projectName}

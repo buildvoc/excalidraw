@@ -55,7 +55,7 @@ export const AddProjectDialog = ({
   
   return (
     <Dialog onCloseRequest={() => setProjectDialogState({ isOpen: false })} title={false} size="small">
-      <div className="ProjectDialog">
+      <div className="ProjectDialog" style={{gap: '1.5rem'}}>
         <h3 className="ProjectDialog__active__header">
           Create new project
         </h3>

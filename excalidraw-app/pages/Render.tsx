@@ -134,6 +134,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { AddProjectDialog, projectDialogStateAtom } from "../projects/AddProjectDialog";
 import { DashboardSaveDialog, dashboardSaveDialogStateAtom } from "../dashboard-save/DashboardSaveDialog";
+import { MyProjectsDialog, myProjectsDialogStateAtom } from "../projects/MyProjectsDialog";
 
 polyfill();
 
@@ -372,6 +373,7 @@ const ExcalidrawWrapper = () => {
 
   const [dashboardSaveDialogState, setDashboardSaveDialogState] = useAtom(dashboardSaveDialogStateAtom);
   const [projectDialogState, setProjectDialogState] = useAtom(projectDialogStateAtom);
+  const [myProjectsDialogState, setMyProjectsDialogState] = useAtom(myProjectsDialogStateAtom);
 
   useHandleLibrary({
     excalidrawAPI,
@@ -728,6 +730,9 @@ const ExcalidrawWrapper = () => {
 
   const isOffline = useAtomValue(isOfflineAtom);
 
+  const [latestProjectId, setLatestProjectId] = useState<string | null>(null);
+  const [latestScaneTitle, setLatestSceneTitle] = useState<string>("Untilted");
+
   const onCollabDialogOpen = useCallback(
     () => setShareDialogState({ isOpen: true, type: "collaborationOnly" }),
     [setShareDialogState],
@@ -741,6 +746,11 @@ const ExcalidrawWrapper = () => {
   const onProjectDialogOpen = useCallback(
     () => setProjectDialogState({ isOpen: true }),
     [setProjectDialogState],
+  );
+
+  const onMyProjectsDialogOpen = useCallback(
+    () => setMyProjectsDialogState({ isOpen: true }),
+    [setMyProjectsDialogState],
   );
 
   // browsers generally prevent infinite self-embedding, there are
@@ -878,6 +888,7 @@ const ExcalidrawWrapper = () => {
           refresh={() => forceRefresh((prev) => !prev)}
           onDashboardSaveDialogOpen={onDashboardSaveDialogOpen}
           onProjectDialogOpen={onProjectDialogOpen}
+          onMyProjectsDialogOpen={onMyProjectsDialogOpen}
         />
         <AppWelcomeScreen
           onCollabDialogOpen={onCollabDialogOpen}
@@ -941,7 +952,23 @@ const ExcalidrawWrapper = () => {
         />
 
         {projectDialogState.isOpen && <AddProjectDialog setErrorMessage={setErrorMessage} /> }
-        {dashboardSaveDialogState.isOpen && <DashboardSaveDialog setErrorMessage={setErrorMessage} /> }
+        {dashboardSaveDialogState.isOpen && 
+          <DashboardSaveDialog 
+            excalidrawAPI={excalidrawAPI}
+            projectId={latestProjectId} 
+            scaneTitle={latestScaneTitle}
+            setLatestProjectId={setLatestProjectId}
+            setLatestSceneTitle={setLatestSceneTitle}
+            setErrorMessage={setErrorMessage}
+          />
+        }
+        {myProjectsDialogState.isOpen && 
+          <MyProjectsDialog 
+            setLatestProjectId={setLatestProjectId}
+            setLatestSceneTitle={setLatestSceneTitle}
+            setErrorMessage={setErrorMessage}
+          />
+        }
 
         {errorMessage && (
           <ErrorDialog onClose={() => setErrorMessage("")}>

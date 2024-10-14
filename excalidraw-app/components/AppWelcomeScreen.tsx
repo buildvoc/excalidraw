@@ -1,14 +1,19 @@
 import React from "react";
-import { loginIcon } from "../../packages/excalidraw/components/icons";
+import { LoadIcon, loginIcon } from "../../packages/excalidraw/components/icons";
 import { useI18n } from "../../packages/excalidraw/i18n";
 import { WelcomeScreen } from "../../packages/excalidraw/index";
 import { isExcalidrawPlusSignedUser } from "../app_constants";
 import { POINTER_EVENTS } from "../../packages/excalidraw/constants";
+import { useAuth } from "../pages/AuthContext";
+import { useAtom } from "jotai";
+import { myProjectsDialogStateAtom } from "../projects/MyProjectsDialog";
 
 export const AppWelcomeScreen: React.FC<{
   onCollabDialogOpen: () => any;
   isCollabEnabled: boolean;
 }> = React.memo((props) => {
+  const { isAuthenticated, logout } = useAuth();
+  const [, setMyProjectsDialogState] = useAtom(myProjectsDialogStateAtom);
   const { t } = useI18n();
   let headingContent;
 
@@ -48,23 +53,29 @@ export const AppWelcomeScreen: React.FC<{
           {headingContent}
         </WelcomeScreen.Center.Heading>
         <WelcomeScreen.Center.Menu>
-          <WelcomeScreen.Center.MenuItemLoadScene />
+          {isAuthenticated && (
+            <WelcomeScreen.Center.MenuItem
+              onSelect={() => setMyProjectsDialogState({ isOpen: true })}
+              shortcut={null}
+              icon={LoadIcon}
+            >
+              My projects
+            </WelcomeScreen.Center.MenuItem>
+          )}
           <WelcomeScreen.Center.MenuItemHelp />
           {props.isCollabEnabled && (
             <WelcomeScreen.Center.MenuItemLiveCollaborationTrigger
               onSelect={() => props.onCollabDialogOpen()}
             />
           )}
-          {!isExcalidrawPlusSignedUser && (
-            <WelcomeScreen.Center.MenuItemLink
-              href={`${
-                import.meta.env.VITE_APP_PLUS_LP
-              }/plus?utm_source=excalidraw&utm_medium=app&utm_content=welcomeScreenGuest`}
+          {isAuthenticated && (
+            <WelcomeScreen.Center.MenuItem
+              onSelect={logout}
               shortcut={null}
               icon={loginIcon}
             >
-              Sign up
-            </WelcomeScreen.Center.MenuItemLink>
+              Sign out
+            </WelcomeScreen.Center.MenuItem>
           )}
         </WelcomeScreen.Center.Menu>
       </WelcomeScreen.Center>
