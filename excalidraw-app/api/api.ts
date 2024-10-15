@@ -1,5 +1,6 @@
 // api.ts
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_APP_AUTH_URL, // Use your environment variable
@@ -21,6 +22,23 @@ api.interceptors.request.use(
   (error) => {
     return Promise.reject(error);
   },
+);
+
+api.interceptors.response.use(
+  (res) => res,
+  async (err) => {
+    const status = err?.response?.status || null;
+    if (status === 401) {
+      toast.error('Your session has expired. Please login again!');
+      setTimeout(() => {
+        localStorage.removeItem("isAuthenticated");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user_data");
+        window.location.reload();
+      }, 3000);
+    }
+    return Promise.reject(err);
+  }
 );
 
 export default api;
