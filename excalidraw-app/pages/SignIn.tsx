@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css"; // Importing styles for toast
 const LoginRegister: React.FC = () => {
   const { isAuthenticated, login: authLogin } = useAuth();
 
+  const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [registerData, setRegisterData] = useState({
@@ -47,43 +48,46 @@ const LoginRegister: React.FC = () => {
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const data = await login(loginData);
       localStorage.setItem("token", data.data.access_token);
       localStorage.setItem("user_data", JSON.stringify(data.data.user_data));
       authLogin();
 
-      toast.success(data.message); // Toast message
-      console.log("Logged in:", data);
       setLoginData({ email: "", password: "" });
+      toast.success(data.message);
     } catch (error: any) {
-      console.error("Login error:", error);
       const errorMessage =
         error.response?.data?.message[0] ||
         "Login failed! Please check your credentials.";
       toast.error(errorMessage);
+      setLoading(false);
     }
   };
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const data = await register(registerData);
-      toast.success(data.message); // Toast message
-      console.log("Registered:", data);
       setRegisterData({
         name: "",
         email: "",
         password: "",
         password_confirmation: "",
       });
+      toast.success(data.message);
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
       // Optionally redirect or show a message
     } catch (error: any) {
-      console.error("Registration error:", error);
       const errorMessage =
         error.response?.data?.message[0] ||
         "Registration failed! Please try again.";
       toast.error(errorMessage);
+      setLoading(false);
     }
   };
 
@@ -144,9 +148,10 @@ const LoginRegister: React.FC = () => {
             <button
               type="submit"
               className="btn animation"
+              disabled={loading}
               style={{ "--i": 3, "--j": 24 } as React.CSSProperties}
             >
-              Login
+              {loading ? "Loging In...": "Log In"}
             </button>
             <div
               className="linkTxt animation"
@@ -154,15 +159,16 @@ const LoginRegister: React.FC = () => {
             >
               <p>
                 Don't have an account?{" "}
-                <span onClick={toggleForm} className="register-link">
+                <a onClick={toggleForm} className="register-link">
                   Sign Up
-                </span>
+                </a>
               </p>
             </div>
           </form>
         </div>
 
         {/* Register form */}
+        { !isLogin &&
         <div className="form-box register">
           <h2
             className="title animation"
@@ -234,9 +240,10 @@ const LoginRegister: React.FC = () => {
             <button
               type="submit"
               className="btn animation"
+              disabled={loading}
               style={{ "--i": 22, "--j": 5 } as React.CSSProperties}
             >
-              Sign Up
+              {loading ? "Signing Up...": "Sign Up"} 
             </button>
             <div
               className="linkTxt animation"
@@ -244,13 +251,14 @@ const LoginRegister: React.FC = () => {
             >
               <p>
                 Already have an account?{" "}
-                <span onClick={toggleForm} className="login-link">
+                <a onClick={toggleForm} className="login-link">
                   Login
-                </span>
+                </a>
               </p>
             </div>
           </form>
         </div>
+        }
       </div>
     </div>
   );

@@ -42,6 +42,12 @@
     flex-direction: column;
 }
 
+@media (max-width: 800px) {
+    .wrapper .form-box {
+        width: 100%;
+    }
+}
+
 .wrapper .form-box.login{
     left: 0;
     padding: 0 60px 0 40px;
