@@ -99,7 +99,7 @@ export const MyProjectsDialog = ({
         {!loading && projects.filter((f: any) => filteredProjectId ? f.id == filteredProjectId: true).map((item: any) => {
           return (
             <div key={item.id}>
-              <div className={`welcome-screen-menu-item`} style={{maxWidth: 'unset'}}>
+              <div className={`welcome-screen-menu-item`} style={{maxWidth: 'unset', cursor: 'pointer'}} onClick={() => setFilteredProjectId(item.id)}>
                 <div className="welcome-screen-menu-item__icon">{LoadIcon}</div>
                 <div className="welcome-screen-menu-item__text">{item.projectName}</div>
                 <div className="welcome-screen-menu-item__shortcut">{item.draws.length} files</div>
