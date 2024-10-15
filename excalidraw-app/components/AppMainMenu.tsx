@@ -30,24 +30,24 @@ export const AppMainMenu: React.FC<{
     <MainMenu>
       {isAuthenticated && (
         <>
-        <MainMenu.Item
-          onSelect={() => props.onProjectDialogOpen()}
-          icon={PlusIcon}
-        >
-          Create new project
-        </MainMenu.Item>
-        <MainMenu.Item
-          onSelect={() => props.onMyProjectsDialogOpen()}
-          icon={LoadIcon}
-        >
-          My projects
-        </MainMenu.Item>
-        <MainMenu.Item
-          onSelect={() => props.onDashboardSaveDialogOpen()}
-          icon={save}
-        >
-          Save to project
-        </MainMenu.Item>
+          <MainMenu.Item
+            onSelect={() => props.onProjectDialogOpen()}
+            icon={PlusIcon}
+          >
+            Create new project
+          </MainMenu.Item>
+          <MainMenu.Item
+            onSelect={() => props.onMyProjectsDialogOpen()}
+            icon={LoadIcon}
+          >
+            My projects
+          </MainMenu.Item>
+          <MainMenu.Item
+            onSelect={() => props.onDashboardSaveDialogOpen()}
+            icon={save}
+          >
+            Save to project
+          </MainMenu.Item>
         </>
       )}
       <MainMenu.DefaultItems.LoadScene />
@@ -77,12 +77,12 @@ export const AppMainMenu: React.FC<{
       <MainMenu.DefaultItems.Socials /> */}
       {isAuthenticated && (
         <>
-        <MainMenu.Item
-          icon={loginIcon} // You can use a different icon if preferred
-          onClick={logout} // Call logout function on click
-        >
-          Sign out
-        </MainMenu.Item>
+          <MainMenu.Item
+            icon={loginIcon} // You can use a different icon if preferred
+            onClick={logout} // Call logout function on click
+          >
+            Sign out
+          </MainMenu.Item>
         </>
       )}
       {/* <MainMenu.ItemLink

@@ -1,5 +1,8 @@
 import React from "react";
-import { LoadIcon, loginIcon } from "../../packages/excalidraw/components/icons";
+import {
+  LoadIcon,
+  loginIcon,
+} from "../../packages/excalidraw/components/icons";
 import { useI18n } from "../../packages/excalidraw/i18n";
 import { WelcomeScreen } from "../../packages/excalidraw/index";
 import { isExcalidrawPlusSignedUser } from "../app_constants";

@@ -11,10 +11,7 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/"
-            element={<ProtectedRoute element={<Render />} />}
-          />
+          <Route path="/" element={<ProtectedRoute element={<Render />} />} />
         </Routes>
       </Router>
     </AuthProvider>

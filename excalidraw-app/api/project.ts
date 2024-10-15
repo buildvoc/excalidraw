@@ -8,11 +8,7 @@ export const getProjects = async () => {
   return response.data;
 };
 
-export const addProject = async ({
-  projectName
-}: {
-  projectName: string;
-}) => {
+export const addProject = async ({ projectName }: { projectName: string }) => {
   const response = await api.post(`${APP_URL}/api/v2/project`, {
     projectName,
   });
@@ -20,14 +16,11 @@ export const addProject = async ({
 };
 
 type ScenePayload = {
-  title: string,
-  project: string|null|undefined,
-  value: string
-}
+  title: string;
+  project: string | null | undefined;
+  value: string;
+};
 export const saveSceneToProject = async (data: ScenePayload) => {
-  
   const response = await api.post(`${APP_URL}/api/v2/draw`, data);
   return response.data;
 };
-
-

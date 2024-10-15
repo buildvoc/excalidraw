@@ -130,11 +130,20 @@ import DebugCanvas, {
 } from "../components/DebugCanvas";
 import { AIComponents } from "../components/AI";
 
-import "react-toastify/dist/ReactToastify.css"; 
+import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { AddProjectDialog, projectDialogStateAtom } from "../projects/AddProjectDialog";
-import { DashboardSaveDialog, dashboardSaveDialogStateAtom } from "../dashboard-save/DashboardSaveDialog";
-import { MyProjectsDialog, myProjectsDialogStateAtom } from "../projects/MyProjectsDialog";
+import {
+  AddProjectDialog,
+  projectDialogStateAtom,
+} from "../projects/AddProjectDialog";
+import {
+  DashboardSaveDialog,
+  dashboardSaveDialogStateAtom,
+} from "../dashboard-save/DashboardSaveDialog";
+import {
+  MyProjectsDialog,
+  myProjectsDialogStateAtom,
+} from "../projects/MyProjectsDialog";
 
 polyfill();
 
@@ -371,9 +380,15 @@ const ExcalidrawWrapper = () => {
   });
   const collabError = useAtomValue(collabErrorIndicatorAtom);
 
-  const [dashboardSaveDialogState, setDashboardSaveDialogState] = useAtom(dashboardSaveDialogStateAtom);
-  const [projectDialogState, setProjectDialogState] = useAtom(projectDialogStateAtom);
-  const [myProjectsDialogState, setMyProjectsDialogState] = useAtom(myProjectsDialogStateAtom);
+  const [dashboardSaveDialogState, setDashboardSaveDialogState] = useAtom(
+    dashboardSaveDialogStateAtom,
+  );
+  const [projectDialogState, setProjectDialogState] = useAtom(
+    projectDialogStateAtom,
+  );
+  const [myProjectsDialogState, setMyProjectsDialogState] = useAtom(
+    myProjectsDialogStateAtom,
+  );
 
   useHandleLibrary({
     excalidrawAPI,
@@ -951,24 +966,26 @@ const ExcalidrawWrapper = () => {
           }}
         />
 
-        {projectDialogState.isOpen && <AddProjectDialog setErrorMessage={setErrorMessage} /> }
-        {dashboardSaveDialogState.isOpen && 
-          <DashboardSaveDialog 
+        {projectDialogState.isOpen && (
+          <AddProjectDialog setErrorMessage={setErrorMessage} />
+        )}
+        {dashboardSaveDialogState.isOpen && (
+          <DashboardSaveDialog
             excalidrawAPI={excalidrawAPI}
-            projectId={latestProjectId} 
+            projectId={latestProjectId}
             scaneTitle={latestScaneTitle}
             setLatestProjectId={setLatestProjectId}
             setLatestSceneTitle={setLatestSceneTitle}
             setErrorMessage={setErrorMessage}
           />
-        }
-        {myProjectsDialogState.isOpen && 
-          <MyProjectsDialog 
+        )}
+        {myProjectsDialogState.isOpen && (
+          <MyProjectsDialog
             setLatestProjectId={setLatestProjectId}
             setLatestSceneTitle={setLatestSceneTitle}
             setErrorMessage={setErrorMessage}
           />
-        }
+        )}
 
         {errorMessage && (
           <ErrorDialog onClose={() => setErrorMessage("")}>

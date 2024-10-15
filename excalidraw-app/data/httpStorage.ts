@@ -1,28 +1,35 @@
 // Inspired and partly copied from https://gitlab.com/kiliandeca/excalidraw-fork
 // MIT, Kilian Decaderincourt
 
-import { getSyncableElements, SyncableExcalidrawElement } from ".";
+import type { SyncableExcalidrawElement } from ".";
+import { getSyncableElements } from ".";
 import { MIME_TYPES } from "../../packages/excalidraw/constants";
 import { decompressData } from "../../packages/excalidraw/data/encode";
-import { encryptData, IV_LENGTH_BYTES } from "../../packages/excalidraw/data/encryption";
+import {
+  encryptData,
+  IV_LENGTH_BYTES,
+} from "../../packages/excalidraw/data/encryption";
 import { restoreElements } from "../../packages/excalidraw/data/restore";
 import { getSceneVersion } from "../../packages/excalidraw/element";
-import { ExcalidrawElement, FileId, OrderedExcalidrawElement } from "../../packages/excalidraw/element/types";
-import {
+import type {
+  ExcalidrawElement,
+  FileId,
+  OrderedExcalidrawElement,
+} from "../../packages/excalidraw/element/types";
+import type {
   AppState,
   BinaryFileData,
   BinaryFileMetadata,
   DataURL,
 } from "../../packages/excalidraw/types";
-import Portal from "../collab/Portal";
+import type Portal from "../collab/Portal";
 
 import { decryptData } from "../../packages/excalidraw/data/encryption";
-import { StoredScene } from "./StorageBackend";
+import type { StoredScene } from "./StorageBackend";
 import { reconcileElements } from "../../packages/excalidraw";
-import { RemoteExcalidrawElement } from "../../packages/excalidraw/data/reconcile";
+import type { RemoteExcalidrawElement } from "../../packages/excalidraw/data/reconcile";
 
 import type { Socket } from "socket.io-client";
-
 
 const HTTP_STORAGE_BACKEND_URL = import.meta.env
   .VITE_APP_HTTP_STORAGE_BACKEND_URL;
@@ -31,10 +38,7 @@ const SCENE_VERSION_LENGTH_BYTES = 4;
 // There is a lot of intentional duplication with the firebase file
 // to prevent modifying upstream files and ease futur maintenance of this fork
 
-const httpStorageSceneVersionCache = new WeakMap<
-  Socket,
-  number
->();
+const httpStorageSceneVersionCache = new WeakMap<Socket, number>();
 
 export const isSavedToHttpStorage = (
   portal: Portal,
@@ -100,9 +104,9 @@ export const saveToHttpStorage = async (
   const existingElements = await getElementsFromBuffer(buffer, roomKey);
   const reconciledElements = getSyncableElements(
     reconcileElements(
-      elements, 
-      existingElements as OrderedExcalidrawElement[] as RemoteExcalidrawElement[], 
-      appState
+      elements,
+      existingElements as OrderedExcalidrawElement[] as RemoteExcalidrawElement[],
+      appState,
     ),
   );
 

@@ -12,21 +12,20 @@ import "./DashboardSaveDialog.scss";
 import { toast } from "react-toastify";
 import { getProjects, saveSceneToProject } from "../api/project";
 import { projectDialogStateAtom } from "../projects/AddProjectDialog";
-import { ExcalidrawImperativeAPI } from "../../packages/excalidraw/types";
+import type { ExcalidrawImperativeAPI } from "../../packages/excalidraw/types";
 import { exportToBackend } from "../data";
 import { getDefaultAppState } from "../../packages/excalidraw/appState";
 
-
 export const dashboardSaveDialogStateAtom = atom<
-  { isOpen: false } | { isOpen: true; }
+  { isOpen: false } | { isOpen: true }
 >({ isOpen: false });
 
 export type DashboardSaveDialogProps = {
   excalidrawAPI: ExcalidrawImperativeAPI | null;
   setErrorMessage: (error: string) => void;
-  setLatestProjectId: (projectId: string|null) => void;
+  setLatestProjectId: (projectId: string | null) => void;
   setLatestSceneTitle: (title: string) => void;
-  projectId: string|null;
+  projectId: string | null;
   scaneTitle: string;
 };
 
@@ -39,8 +38,12 @@ export const DashboardSaveDialog = ({
   scaneTitle,
 }: DashboardSaveDialogProps) => {
   const { t } = useI18n();
-  const [dashboardSaveDialogState, setDashboardSaveDialogState] = useAtom(dashboardSaveDialogStateAtom);
-  const [projectDialogState, setProjectDialogState] = useAtom(projectDialogStateAtom);
+  const [dashboardSaveDialogState, setDashboardSaveDialogState] = useAtom(
+    dashboardSaveDialogStateAtom,
+  );
+  const [projectDialogState, setProjectDialogState] = useAtom(
+    projectDialogStateAtom,
+  );
 
   const { openDialog } = useUIAppState();
 
@@ -83,7 +86,6 @@ export const DashboardSaveDialog = ({
     const files = excalidrawAPI.getFiles();
 
     try {
-      
       const { url, errorMessage } = await exportToBackend(
         elements,
         {
@@ -103,9 +105,9 @@ export const DashboardSaveDialog = ({
         const dataInput = {
           title: scaneTitle,
           project: projectId,
-          value: new URL(url).hash
-        }
-        
+          value: new URL(url).hash,
+        };
+
         await saveSceneToProject(dataInput);
         toast.success("Saved successfully.");
         setDashboardSaveDialogState({ isOpen: false });
@@ -119,9 +121,13 @@ export const DashboardSaveDialog = ({
   if (!dashboardSaveDialogState.isOpen) {
     return null;
   }
-  
+
   return (
-    <Dialog onCloseRequest={() => setDashboardSaveDialogState({ isOpen: false })} title={false} size="small">
+    <Dialog
+      onCloseRequest={() => setDashboardSaveDialogState({ isOpen: false })}
+      title={false}
+      size="small"
+    >
       <div className="DashboardSaveDialog">
         <h3 className="DashboardSaveDialog__active__header">
           Save to project...
@@ -135,19 +141,22 @@ export const DashboardSaveDialog = ({
         />
         <div className="ExcTextField--fullWidth">
           <div className="ExcTextField__label">
-            Select project or {" "}
-            <a className="ExcTextField__link"
-              onClick={() => setProjectDialogState({isOpen: true})}
-              >Add new</a>
+            Select project or{" "}
+            <a
+              className="ExcTextField__link"
+              onClick={() => setProjectDialogState({ isOpen: true })}
+            >
+              Add new
+            </a>
           </div>
           <select
             className="dropdown-select dropdown-select__proj"
             onChange={({ target }) => setLatestProjectId(target.value)}
             value={projectId ? projectId : ""}
             aria-label={"Select project"}
-            style={{width: "100%"}}
+            style={{ width: "100%" }}
           >
-            <option value={""}>{loading ? 'Loading projects...': ''}</option>
+            <option value={""}>{loading ? "Loading projects..." : ""}</option>
             {projects.map((item: any) => (
               <option key={item.id} value={item.id}>
                 {item.projectName}
@@ -165,7 +174,7 @@ export const DashboardSaveDialog = ({
             variant="outlined"
             color="primary"
             label={t("buttons.cancel")}
-            onClick={() => setDashboardSaveDialogState({isOpen: false})}
+            onClick={() => setDashboardSaveDialogState({ isOpen: false })}
           />
           <FilledButton
             size="large"

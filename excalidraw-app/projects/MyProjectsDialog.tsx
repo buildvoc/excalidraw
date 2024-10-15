@@ -7,16 +7,15 @@ import { atom, useAtom } from "jotai";
 
 import "./ProjectDialog.scss";
 import { getProjects } from "../api/project";
-import { LinkIcon, LoadIcon, } from "../../packages/excalidraw/components/icons";
+import { LinkIcon, LoadIcon } from "../../packages/excalidraw/components/icons";
 import Spinner from "../../packages/excalidraw/components/Spinner";
 
-
 export const myProjectsDialogStateAtom = atom<
-  { isOpen: false } | { isOpen: true; }
+  { isOpen: false } | { isOpen: true }
 >({ isOpen: false });
 
 export type MyProjectsDialogProps = {
-  setLatestProjectId: (projectId: string|null) => void;
+  setLatestProjectId: (projectId: string | null) => void;
   setLatestSceneTitle: (title: string) => void;
   setErrorMessage: (error: string) => void;
 };
@@ -27,10 +26,11 @@ export const MyProjectsDialog = ({
   setErrorMessage,
 }: MyProjectsDialogProps) => {
   const { t } = useI18n();
-  const [myProjectDialogState, setMyProjectsDialogState] = useAtom(myProjectsDialogStateAtom);
+  const [myProjectDialogState, setMyProjectsDialogState] = useAtom(
+    myProjectsDialogStateAtom,
+  );
 
   const { openDialog } = useUIAppState();
-  
 
   useEffect(() => {
     if (openDialog) {
@@ -63,17 +63,20 @@ export const MyProjectsDialog = ({
   if (!myProjectDialogState.isOpen) {
     return null;
   }
-  
+
   return (
-    <Dialog onCloseRequest={() => setMyProjectsDialogState({ isOpen: false })} title={false} size="small">
+    <Dialog
+      onCloseRequest={() => setMyProjectsDialogState({ isOpen: false })}
+      title={false}
+      size="small"
+    >
       <div className="ProjectDialog">
-        <h3 className="ProjectDialog__active__header">
-          My projects
-        </h3>
-        <div className="ExcTextField--fullWidth" style={{marginTop: '1.5rem', marginBottom: '1.5rem'}}>
-          <div className="ExcTextField__label">
-            Filter by project 
-          </div>
+        <h3 className="ProjectDialog__active__header">My projects</h3>
+        <div
+          className="ExcTextField--fullWidth"
+          style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}
+        >
+          <div className="ExcTextField__label">Filter by project</div>
           <select
             className="dropdown-select dropdown-select__proj"
             onChange={({ target }) => {
@@ -82,9 +85,11 @@ export const MyProjectsDialog = ({
             }}
             value={filteredProjectId ? filteredProjectId : ""}
             aria-label={"Select project"}
-            style={{width: "100%"}}
+            style={{ width: "100%" }}
           >
-            <option value={""}>{loading ? 'Loading projects...': 'My projects'}</option>
+            <option value={""}>
+              {loading ? "Loading projects..." : "My projects"}
+            </option>
             {projectOpts.map((item: any) => (
               <option key={item.id} value={item.id}>
                 {item.projectName}
@@ -93,40 +98,68 @@ export const MyProjectsDialog = ({
           </select>
         </div>
 
-        {!loading && projects.filter((f: any) => filteredProjectId ? f.id == filteredProjectId: true).map((item: any) => {
-          return (
-            <div key={item.id}>
-              <div className={`welcome-screen-menu-item`} style={{maxWidth: 'unset', cursor: 'pointer'}} onClick={() => setFilteredProjectId(item.id)}>
-                <div className="welcome-screen-menu-item__icon">{LoadIcon}</div>
-                <div className="welcome-screen-menu-item__text">{item.projectName}</div>
-                <div className="welcome-screen-menu-item__shortcut">{item.draws.length} files</div>
-              </div>
-              {item.draws.map((d: any) => (
-                <a
-                  key={d.id}
-                  className={`welcome-screen-menu-item`}
-                  href={d.value}
-                  onClick={() => {
-                    setLatestProjectId(item.id);
-                    setLatestSceneTitle(d.title);
-                    setMyProjectsDialogState({ isOpen: false });
-                  }}
-                  style={{maxWidth: 'unset', width: 'unset', marginLeft: 24}}
-                >
-                  <>
-                    <div className="welcome-screen-menu-item__icon">{LinkIcon}</div>
-                    <div className="welcome-screen-menu-item__text">{d.title}</div>
-                    <div className="welcome-screen-menu-item__shortcut">{"Open"}</div>
-                  </>
-                </a>
-              ))}
-            </div>
-          );
-        })}
+        {!loading &&
+          projects
+            .filter((f: any) =>
+              filteredProjectId ? f.id == filteredProjectId : true,
+            )
+            .map((item: any) => {
+              return (
+                <div key={item.id}>
+                  <div
+                    className={`welcome-screen-menu-item`}
+                    style={{ maxWidth: "unset", cursor: "pointer" }}
+                    onClick={() => setFilteredProjectId(item.id)}
+                  >
+                    <div className="welcome-screen-menu-item__icon">
+                      {LoadIcon}
+                    </div>
+                    <div className="welcome-screen-menu-item__text">
+                      {item.projectName}
+                    </div>
+                    <div className="welcome-screen-menu-item__shortcut">
+                      {item.draws.length} files
+                    </div>
+                  </div>
+                  {item.draws.map((d: any) => (
+                    <a
+                      key={d.id}
+                      className={`welcome-screen-menu-item`}
+                      href={d.value}
+                      onClick={() => {
+                        setLatestProjectId(item.id);
+                        setLatestSceneTitle(d.title);
+                        setMyProjectsDialogState({ isOpen: false });
+                      }}
+                      style={{
+                        maxWidth: "unset",
+                        width: "unset",
+                        marginLeft: 24,
+                      }}
+                    >
+                      <>
+                        <div className="welcome-screen-menu-item__icon">
+                          {LinkIcon}
+                        </div>
+                        <div className="welcome-screen-menu-item__text">
+                          {d.title}
+                        </div>
+                        <div className="welcome-screen-menu-item__shortcut">
+                          {"Open"}
+                        </div>
+                      </>
+                    </a>
+                  ))}
+                </div>
+              );
+            })}
 
         {loading && <Spinner />}
 
-        <div className="ProjectDialog__active__description" style={{marginTop: '1.5rem'}}>
+        <div
+          className="ProjectDialog__active__description"
+          style={{ marginTop: "1.5rem" }}
+        >
           <p>{t("encrypted.tooltip")}</p>
         </div>
       </div>

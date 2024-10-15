@@ -139,7 +139,9 @@ class Collab extends PureComponent<CollabProps, CollabState> {
     this.state = {
       errorMessage: null,
       dialogNotifiedErrors: {},
-      username: localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data") as string)?.name : importUsernameFromLocalStorage() || "",
+      username: localStorage.getItem("user_data")
+        ? JSON.parse(localStorage.getItem("user_data") as string)?.name
+        : importUsernameFromLocalStorage() || "",
       activeRoomLink: null,
     };
     this.portal = new Portal(this);
@@ -281,7 +283,7 @@ class Collab extends PureComponent<CollabProps, CollabState> {
     if (
       this.isCollaborating() &&
       (this.fileManager.shouldPreventUnload(syncableElements) ||
-      !storageBackend?.isSaved(this.portal, syncableElements))
+        !storageBackend?.isSaved(this.portal, syncableElements))
     ) {
       // this won't run in time if user decides to leave the site, but
       //  the purpose is to run in immediately after user decides to stay
@@ -309,7 +311,11 @@ class Collab extends PureComponent<CollabProps, CollabState> {
 
       this.resetErrorIndicator();
 
-      if (this.isCollaborating() && storedElements && Array.isArray(storedElements)) {
+      if (
+        this.isCollaborating() &&
+        storedElements &&
+        Array.isArray(storedElements)
+      ) {
         this.handleRemoteSceneUpdate(this._reconcileElements(storedElements));
       }
     } catch (error: any) {

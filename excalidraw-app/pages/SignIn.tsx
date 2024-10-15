@@ -151,7 +151,7 @@ const LoginRegister: React.FC = () => {
               disabled={loading}
               style={{ "--i": 3, "--j": 24 } as React.CSSProperties}
             >
-              {loading ? "Loging In...": "Log In"}
+              {loading ? "Loging In..." : "Log In"}
             </button>
             <div
               className="linkTxt animation"
@@ -168,97 +168,97 @@ const LoginRegister: React.FC = () => {
         </div>
 
         {/* Register form */}
-        { !isLogin &&
-        <div className="form-box register">
-          <h2
-            className="title animation"
-            style={{ "--i": 17, "--j": 0 } as React.CSSProperties}
-          >
-            Sign Up
-          </h2>
-          <form onSubmit={handleRegisterSubmit}>
-            <div
-              className="input-box animation"
-              style={{ "--i": 18, "--j": 1 } as React.CSSProperties}
+        {!isLogin && (
+          <div className="form-box register">
+            <h2
+              className="title animation"
+              style={{ "--i": 17, "--j": 0 } as React.CSSProperties}
             >
-              <input
-                type="text"
-                name="name"
-                value={registerData.name}
-                onChange={handleRegisterChange}
-                required
-              />
-              <label>Name</label>
-              <i className="bx bxs-user"></i>
-            </div>
+              Sign Up
+            </h2>
+            <form onSubmit={handleRegisterSubmit}>
+              <div
+                className="input-box animation"
+                style={{ "--i": 18, "--j": 1 } as React.CSSProperties}
+              >
+                <input
+                  type="text"
+                  name="name"
+                  value={registerData.name}
+                  onChange={handleRegisterChange}
+                  required
+                />
+                <label>Name</label>
+                <i className="bx bxs-user"></i>
+              </div>
 
-            <div
-              className="input-box animation"
-              style={{ "--i": 19, "--j": 2 } as React.CSSProperties}
-            >
-              <input
-                type="email"
-                name="email"
-                value={registerData.email}
-                onChange={handleRegisterChange}
-                required
-              />
-              <label>Email</label>
-              <i className="bx bxs-envelope"></i>
-            </div>
+              <div
+                className="input-box animation"
+                style={{ "--i": 19, "--j": 2 } as React.CSSProperties}
+              >
+                <input
+                  type="email"
+                  name="email"
+                  value={registerData.email}
+                  onChange={handleRegisterChange}
+                  required
+                />
+                <label>Email</label>
+                <i className="bx bxs-envelope"></i>
+              </div>
 
-            <div
-              className="input-box animation"
-              style={{ "--i": 20, "--j": 3 } as React.CSSProperties}
-            >
-              <input
-                type="password"
-                name="password"
-                value={registerData.password}
-                onChange={handleRegisterChange}
-                required
-              />
-              <label>Password</label>
-              <i className="bx bxs-lock-alt"></i>
-            </div>
+              <div
+                className="input-box animation"
+                style={{ "--i": 20, "--j": 3 } as React.CSSProperties}
+              >
+                <input
+                  type="password"
+                  name="password"
+                  value={registerData.password}
+                  onChange={handleRegisterChange}
+                  required
+                />
+                <label>Password</label>
+                <i className="bx bxs-lock-alt"></i>
+              </div>
 
-            <div
-              className="input-box animation"
-              style={{ "--i": 21, "--j": 4 } as React.CSSProperties}
-            >
-              <input
-                type="password"
-                name="password_confirmation"
-                value={registerData.password_confirmation}
-                onChange={handleRegisterChange}
-                required
-              />
-              <label>Confirm Password</label>
-              <i className="bx bxs-lock-alt"></i>
-            </div>
+              <div
+                className="input-box animation"
+                style={{ "--i": 21, "--j": 4 } as React.CSSProperties}
+              >
+                <input
+                  type="password"
+                  name="password_confirmation"
+                  value={registerData.password_confirmation}
+                  onChange={handleRegisterChange}
+                  required
+                />
+                <label>Confirm Password</label>
+                <i className="bx bxs-lock-alt"></i>
+              </div>
 
-            <button
-              type="submit"
-              className="btn animation"
-              disabled={loading}
-              style={{ "--i": 22, "--j": 5 } as React.CSSProperties}
-            >
-              {loading ? "Signing Up...": "Sign Up"} 
-            </button>
-            <div
-              className="linkTxt animation"
-              style={{ "--i": 23, "--j": 6 } as React.CSSProperties}
-            >
-              <p>
-                Already have an account?{" "}
-                <a onClick={toggleForm} className="login-link">
-                  Login
-                </a>
-              </p>
-            </div>
-          </form>
-        </div>
-        }
+              <button
+                type="submit"
+                className="btn animation"
+                disabled={loading}
+                style={{ "--i": 22, "--j": 5 } as React.CSSProperties}
+              >
+                {loading ? "Signing Up..." : "Sign Up"}
+              </button>
+              <div
+                className="linkTxt animation"
+                style={{ "--i": 23, "--j": 6 } as React.CSSProperties}
+              >
+                <p>
+                  Already have an account?{" "}
+                  <a onClick={toggleForm} className="login-link">
+                    Login
+                  </a>
+                </p>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,10 @@
-import { SyncableExcalidrawElement } from ".";
-import { ExcalidrawElement, FileId } from "../../packages/excalidraw/element/types";
-import { AppState, BinaryFileData } from "../../packages/excalidraw/types";
-import Portal from "../collab/Portal";
+import type { SyncableExcalidrawElement } from ".";
+import type {
+  ExcalidrawElement,
+  FileId,
+} from "../../packages/excalidraw/element/types";
+import type { AppState, BinaryFileData } from "../../packages/excalidraw/types";
+import type Portal from "../collab/Portal";
 
 import type { Socket } from "socket.io-client";
 

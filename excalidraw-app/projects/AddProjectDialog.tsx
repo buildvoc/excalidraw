@@ -12,9 +12,8 @@ import "./ProjectDialog.scss";
 import { toast } from "react-toastify";
 import { addProject } from "../api/project";
 
-
 export const projectDialogStateAtom = atom<
-  { isOpen: false } | { isOpen: true; }
+  { isOpen: false } | { isOpen: true }
 >({ isOpen: false });
 
 export type AddProjectDialogProps = {
@@ -25,23 +24,23 @@ export const AddProjectDialog = ({
   setErrorMessage,
 }: AddProjectDialogProps) => {
   const { t } = useI18n();
-  const [projectDialogState, setProjectDialogState] = useAtom(projectDialogStateAtom);
+  const [projectDialogState, setProjectDialogState] = useAtom(
+    projectDialogStateAtom,
+  );
 
   const { openDialog } = useUIAppState();
-  
 
   useEffect(() => {
     if (openDialog) {
       setProjectDialogState({ isOpen: false });
     }
   }, [openDialog, setProjectDialogState]);
-  
 
   const [projectName, setProjectName] = useState<string>("");
 
   const handleSubmit = async () => {
     try {
-      await addProject({projectName});
+      await addProject({ projectName });
       toast.success("New Project created.");
       setProjectDialogState({ isOpen: false });
     } catch (error: any) {
@@ -53,13 +52,15 @@ export const AddProjectDialog = ({
   if (!projectDialogState.isOpen) {
     return null;
   }
-  
+
   return (
-    <Dialog onCloseRequest={() => setProjectDialogState({ isOpen: false })} title={false} size="small">
-      <div className="ProjectDialog" style={{gap: '1.5rem'}}>
-        <h3 className="ProjectDialog__active__header">
-          Create new project
-        </h3>
+    <Dialog
+      onCloseRequest={() => setProjectDialogState({ isOpen: false })}
+      title={false}
+      size="small"
+    >
+      <div className="ProjectDialog" style={{ gap: "1.5rem" }}>
+        <h3 className="ProjectDialog__active__header">Create new project</h3>
         <TextField
           placeholder="Name"
           label="Enter project name"

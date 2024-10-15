@@ -29,7 +29,7 @@ api.interceptors.response.use(
   async (err) => {
     const status = err?.response?.status || null;
     if (status === 401) {
-      toast.error('Your session has expired. Please login again!');
+      toast.error("Your session has expired. Please login again!");
       setTimeout(() => {
         localStorage.removeItem("isAuthenticated");
         localStorage.removeItem("token");
@@ -38,7 +38,7 @@ api.interceptors.response.use(
       }, 3000);
     }
     return Promise.reject(err);
-  }
+  },
 );
 
 export default api;
